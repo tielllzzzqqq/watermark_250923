@@ -109,9 +109,10 @@ def process_directory(input_dir, font_size=30, font_color=(255, 255, 255), posit
     output_dir = os.path.join(input_dir, os.path.basename(input_dir) + "_watermark")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+        print(f"创建输出目录: {output_dir}")
     
     # 支持的图片格式
-    image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.gif', '*.bmp']
+    image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.gif', '*.bmp', '*.tiff']
     image_files = []
     
     # 获取所有图片文件
@@ -119,11 +120,16 @@ def process_directory(input_dir, font_size=30, font_color=(255, 255, 255), posit
         pattern = os.path.join(input_dir, ext)
         image_files.extend(glob.glob(pattern))
     
+    if not image_files:
+        print(f"警告: 在目录 '{input_dir}' 中未找到图片文件")
+        return output_dir
+    
     # 处理每个图片
     success_count = 0
     for image_path in image_files:
         filename = os.path.basename(image_path)
         output_path = os.path.join(output_dir, filename)
+        print(f"处理图片: {filename}")
         if add_watermark(image_path, output_path, font_size, font_color, position):
             success_count += 1
     
